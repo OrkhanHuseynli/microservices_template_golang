@@ -3,8 +3,8 @@ module microservices_template_golang/payment
 go 1.13
 
 require (
-	github.com/Shopify/sarama v1.26.1 // indirect
-	github.com/bsm/sarama-cluster v2.1.15+incompatible // indirect
+	github.com/Shopify/sarama v1.26.1
+	github.com/bsm/sarama-cluster v2.1.15+incompatible
 	github.com/lovoo/goka v0.1.4
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect

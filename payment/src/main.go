@@ -4,10 +4,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/Shopify/sarama"
+	cluster "github.com/bsm/sarama-cluster"
+	"github.com/lovoo/goka/kafka"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/lovoo/goka"
 	"github.com/lovoo/goka/codec"
@@ -19,10 +23,26 @@ var (
 	group   goka.Group  = "example-group"
 )
 
+
+func NewConfig() *cluster.Config {
+	c := kafka.NewConfig()
+	c.Version = sarama.V2_1_0_0
+	c.Consumer.Offsets.CommitInterval = 100 * time.Millisecond
+	c.Producer.Return.Errors = true
+	c.Producer.Return.Successes = true
+	c.Producer.RequiredAcks = sarama.WaitForAll
+	c.Producer.Compression = sarama.CompressionSnappy
+	c.Producer.Flush.Messages = 16
+	c.Producer.Flush.Frequency = 5 * time.Millisecond
+	return c
+}
+
+
 // emits a single message and leave
 func runEmitter() {
+	pc := NewConfig()
 	fmt.Println("\n*********************\n", brokers[0], "\n*********************\n")
-	emitter, err := goka.NewEmitter(brokers, topic, new(codec.String))
+	emitter, err := goka.NewEmitter(brokers, topic, new(codec.String), goka.WithEmitterProducerBuilder(kafka.ProducerBuilderWithConfig(pc)))
 	fmt.Println(emitter)
 	if err != nil {
 		log.Fatalf("error creating emitter: %v", err)
@@ -55,14 +75,18 @@ func runProcessor() {
 		log.Printf("key = %s, counter = %v, msg = %v", ctx.Key(), counter, msg)
 	}
 
+
+	pc := NewConfig()
+	cc := NewConfig()
 	// Define a new processor group. The group defines all inputs, outputs, and
 	// serialization formats. The group-table topic is "example-group-table".
-	g := goka.DefineGroup(group,
+	p, err := goka.NewProcessor(brokers,
+		goka.DefineGroup(group,
 		goka.Input(topic, new(codec.String), cb),
-		goka.Persist(new(codec.Int64)),
+	),
+		goka.WithProducerBuilder(kafka.ProducerBuilderWithConfig(pc)), // our config, mostly default
+		goka.WithConsumerBuilder(kafka.ConsumerBuilderWithConfig(cc)), // our config, mostly default
 	)
-
-	p, err := goka.NewProcessor(brokers, g)
 	if err != nil {
 		log.Fatalf("error creating processor: %v", err)
 	}
