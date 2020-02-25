@@ -23,7 +23,7 @@ var (
 func runEmitter() {
 	pc := eventmanager.NewConfig()
 	emitter := eventmanager.NewAppEmitter(brokers, topic, new(codec.String), pc)
-	//defer emitter.Finish()
+	defer emitter.Finish()
 	err := emitter.EmitSync("some-key", "some-value")
 	if err != nil {
 		log.Fatalf("error emitting message: %v", err)
@@ -84,6 +84,6 @@ func runProcessor() {
 }
 
 func main() {
-	runEmitter()   // emits one message and stops
-	//runProcessor() // press ctrl-c to stop
+	//runEmitter()   // emits one message and stops
+	runProcessor() // press ctrl-c to stop
 }
