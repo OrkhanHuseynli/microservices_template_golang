@@ -19,36 +19,16 @@ var (
 	group   goka.Group  = "example-group"
 )
 
-// emits a single message and leave
-func runEmitter() {
-	pc := eventmanager.NewConfig()
-	emitter := eventmanager.NewAppEmitter(brokers, topic, new(codec.String), pc)
-	defer emitter.Finish()
-	err := emitter.EmitSync("some-key", "some-value")
-	if err != nil {
-		log.Fatalf("error emitting message: %v", err)
-	}
-	log.Println("******** message was successfully emitted ********")
-}
-
 // process messages until ctrl-c is pressed
 func runProcessor() {
 	// process callback is invoked for each message delivered from
 	// "example-stream" topic.
 	cb := func(ctx goka.Context, msg interface{}) {
 		log.Println("******** running processor ********")
-		var counter int64
-		// ctx.Value() gets from the group table the value that is stored for
-		// the message's key.
-		if val := ctx.Value(); val != nil {
-			fmt.Println("*** Value ", val)
-			counter = val.(int64)
-		}
-		counter++
 		// SetValue stores the incremented counter in the group table for in
 		// the message's key.
-		ctx.SetValue(counter)
-		log.Printf("key = %s, counter = %v, msg = %v", ctx.Key(), counter, msg)
+		//ctx.SetValue(counter)
+		log.Printf("msg = %v",msg)
 	}
 
 
