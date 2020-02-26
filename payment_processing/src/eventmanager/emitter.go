@@ -30,6 +30,3 @@ func NewAppEmitter(brokers []string, topic goka.Stream, codec goka.Codec, produc
 	return emitter
 }
 
-func DefaultEmitter(brokers []string, topic goka.Stream, codec goka.Codec) *goka.Emitter {
-	return NewAppEmitter(brokers, topic, codec, NewConfig())
-}

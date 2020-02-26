@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/lovoo/goka"
+	"github.com/lovoo/goka/codec"
 	"github.com/lovoo/goka/kafka"
 	"log"
 	"microservices_template_golang/payment/src/eventmanager"
-	"microservices_template_golang/payment/src/models"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,7 +15,7 @@ import (
 
 var (
 	brokers             = []string{"kafka:9090"}
-	topic   goka.Stream = "example-stream"
+	topic   goka.Stream = "new-stream"
 	group   goka.Group  = "example-group"
 )
 
@@ -38,7 +38,7 @@ func runProcessor() {
 	// serialization formats. The group-table topic is "example-group-table".
 	p, err := goka.NewProcessor(brokers,
 		goka.DefineGroup(group,
-		goka.Input(topic, new(models.PaymentCodec), cb),
+		goka.Input(topic, new(codec.String), cb),
 	),
 		goka.WithProducerBuilder(kafka.ProducerBuilderWithConfig(pc)), // our config, mostly default
 		goka.WithConsumerBuilder(kafka.ConsumerBuilderWithConfig(cc)), // our config, mostly default
@@ -50,7 +50,7 @@ func runProcessor() {
 	done := make(chan bool)
 	go func() {
 		defer close(done)
-		fmt.Println("******** run processor xzd")
+		fmt.Println("******** run processor 2 xzd")
 		if err = p.Run(ctx); err != nil {
 			log.Fatalf("error running processor: %v", err)
 		}
