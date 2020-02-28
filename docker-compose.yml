@@ -39,3 +39,23 @@ services:
       - "8080:8080"
     depends_on:
       - kafka
+
+  payment_cancelation:
+    build:
+      context: ./payment_cancelation
+      dockerfile: Dockerfile
+    image: payment_cancelation
+    ports:
+      - "8081:8081"
+    depends_on:
+      - kafka
+
+  payment_processing:
+    build:
+      context: ./payment_processing
+      dockerfile: Dockerfile
+    image: payment_processing
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
