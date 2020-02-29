@@ -5,7 +5,7 @@ import (
 	"github.com/lovoo/goka"
 	"log"
 	"net/http"
-	"utils/src/models"
+	"microservices_template_golang/payment/src/models"
 )
 
 type ServiceHandler struct {
@@ -21,7 +21,7 @@ func (h ServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	var payment Payment
+	var payment models.Payment
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&payment)
 	if err != nil {
@@ -40,7 +40,7 @@ func (h ServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error when trying to process the payment", http.StatusInternalServerError)
 		return
 	}
-	response := SimpleResponse{Message: "Your payment was successfully put in the process" }
+	response := models.SimpleResponse{Message: "Your payment was successfully put in the process" }
 	encoder := json.NewEncoder(w)
 	encoder.Encode(&response)
 }
