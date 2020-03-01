@@ -9,6 +9,8 @@ require (
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/golang/mock v1.4.0 // indirect
+	github.com/google/uuid v1.1.1 // indirect
+	github.com/lithammer/shortuuid v3.0.0+incompatible
 	github.com/lovoo/goka v0.1.4
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect

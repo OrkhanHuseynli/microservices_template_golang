@@ -2,7 +2,6 @@ package eventmanager
 
 import (
 	"context"
-	"fmt"
 	cluster "github.com/bsm/sarama-cluster"
 	"github.com/lovoo/goka"
 	"github.com/lovoo/goka/kafka"
@@ -21,7 +20,7 @@ func (e *EventProcessor) InitSimpleProcessor(brokers []string, group goka.Group,
 	topic goka.Stream, pc, cc *cluster.Config) {
 	p, err := goka.NewProcessor(brokers,
 		goka.DefineGroup(group,
-			goka.Input(topic, new(models.PaymentCodec), groupCallback),
+			goka.Input(topic, new(models.ProcessedPaymentCodec), groupCallback),
 		),
 		goka.WithProducerBuilder(kafka.ProducerBuilderWithConfig(pc)), // our config, mostly default
 		goka.WithConsumerBuilder(kafka.ConsumerBuilderWithConfig(cc)), // our config, mostly default
@@ -40,11 +39,11 @@ func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group
 
 	cb := func(ctx goka.Context, msg interface{}) {
 		log.Printf("msg = %v", msg)
-		payment, ok := msg.(*models.Payment)
+		payment, ok := msg.(*models.ProcessedPayment)
 		if !ok {
 			log.Println("Error while parsing message to the structure")
 		}
-		log.Printf("Payment from %v was just processed", payment.Author)
+		log.Printf("Payment with %v ID from %v was just processed", payment.PaymentID, payment.Author)
 	}
 
 	e.InitSimpleProcessor(brokers, group, cb, topic, pc, cc)
@@ -55,7 +54,6 @@ func (e *EventProcessor) Run(){
 	done := make(chan bool)
 	go func() {
 		defer close(done)
-		fmt.Println("******** run processor xzd")
 		if err := e.processor.Run(ctx); err != nil {
 			log.Fatalf("error running processor: %v", err)
 		}

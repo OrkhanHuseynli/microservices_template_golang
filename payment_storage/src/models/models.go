@@ -10,3 +10,8 @@ type Payment struct {
 	Product   string	`json:"product"`
 	Sum		  string	`json:"sum"`
 }
+
+type ProcessedPayment struct {
+	PaymentID string 	`json:"paymentID"`
+	Payment
+}

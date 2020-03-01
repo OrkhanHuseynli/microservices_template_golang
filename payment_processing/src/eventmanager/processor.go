@@ -2,12 +2,12 @@ package eventmanager
 
 import (
 	"context"
-	"fmt"
 	cluster "github.com/bsm/sarama-cluster"
 	"github.com/lovoo/goka"
 	"github.com/lovoo/goka/kafka"
 	"log"
 	"microservices_template_golang/payment/src/models"
+	"microservices_template_golang/payment/src/utils"
 	"os"
 	"os/signal"
 	"syscall"
@@ -34,10 +34,10 @@ func (e *EventProcessor) InitSimpleProcessor(brokers []string, group goka.Group,
 	e.processor = p
 }
 
-func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group, topic goka.Stream){
+func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group, topic goka.Stream) {
 	pc := NewConfig()
 	cc := NewConfig()
-	emitter := NewAppEmitter(brokers, "payment-storage", new(models.PaymentCodec), pc)
+	emitter := NewAppEmitter(brokers, "payment-storage", new(models.ProcessedPaymentCodec), pc)
 
 	cb := func(ctx goka.Context, msg interface{}) {
 		log.Printf("msg = %v", msg)
@@ -46,8 +46,9 @@ func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group
 			log.Println("Error while parsing message to the structure")
 		}
 		log.Printf("Payment from %v was just processed", payment.Author)
-
-		err := emitter.EmitSync(payment.Author, payment)
+		processedPayment := &models.ProcessedPayment{utils.GenShortUUID(), *payment}
+		log.Println(processedPayment)
+		err := emitter.EmitSync("eeew2", processedPayment)
 		if err != nil {
 			log.Fatalf("error emitting message: %v", err)
 		}
@@ -56,12 +57,11 @@ func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group
 	e.InitSimpleProcessor(brokers, group, cb, topic, pc, cc)
 }
 
-func (e *EventProcessor) Run(){
+func (e *EventProcessor) Run() {
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan bool)
 	go func() {
 		defer close(done)
-		fmt.Println("******** run processor xzd")
 		if err := e.processor.Run(ctx); err != nil {
 			log.Fatalf("error running processor: %v", err)
 		}
