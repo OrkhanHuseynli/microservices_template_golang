@@ -13,6 +13,8 @@ import (
 	"syscall"
 )
 
+var storageTopic goka.Stream = "payment-storage"
+
 type EventProcessor struct {
 	processor *goka.Processor
 }
@@ -37,7 +39,7 @@ func (e *EventProcessor) InitSimpleProcessor(brokers []string, group goka.Group,
 func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group, topic goka.Stream) {
 	pc := NewConfig()
 	cc := NewConfig()
-	emitter := NewAppEmitter(brokers, "payment-storage", new(models.ProcessedPaymentCodec), pc)
+	emitter := NewAppEmitter(brokers, storageTopic, new(models.ProcessedPaymentCodec), pc)
 
 	cb := func(ctx goka.Context, msg interface{}) {
 		log.Printf("msg = %v", msg)
@@ -47,8 +49,7 @@ func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group
 		}
 		log.Printf("Payment from %v was just processed", payment.Author)
 		processedPayment := &models.ProcessedPayment{utils.GenShortUUID(), *payment}
-		log.Println(processedPayment)
-		err := emitter.EmitSync("eeew2", processedPayment)
+		err := emitter.EmitSync(processedPayment.Author, processedPayment)
 		if err != nil {
 			log.Fatalf("error emitting message: %v", err)
 		}

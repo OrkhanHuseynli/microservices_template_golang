@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/lovoo/goka"
 	"log"
-	"net/http"
 	"microservices_template_golang/payment/src/models"
+	"net/http"
 )
 
 type ServiceHandler struct {
@@ -17,10 +17,16 @@ func NewServiceHandler(emitter *goka.Emitter) http.Handler {
 }
 
 func (h ServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost{
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
+	switch r.Method {
+		case "POST":
+			h.handlePostRequest(w, r)
+		default :
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
 	}
+}
+
+func (h ServiceHandler) handlePostRequest(w http.ResponseWriter, r *http.Request){
 	var payment models.Payment
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&payment)
@@ -44,3 +50,4 @@ func (h ServiceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.Encode(&response)
 }
+

@@ -33,19 +33,9 @@ func (e *EventProcessor) InitSimpleProcessor(brokers []string, group goka.Group,
 	e.processor = p
 }
 
-func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group, topic goka.Stream){
+func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group, topic goka.Stream, cb func(ctx goka.Context, msg interface{})){
 	pc := NewConfig()
 	cc := NewConfig()
-
-	cb := func(ctx goka.Context, msg interface{}) {
-		log.Printf("msg = %v", msg)
-		payment, ok := msg.(*models.ProcessedPayment)
-		if !ok {
-			log.Println("Error while parsing message to the structure")
-		}
-		log.Printf("Payment with %v ID from %v was just processed", payment.PaymentID, payment.Author)
-	}
-
 	e.InitSimpleProcessor(brokers, group, cb, topic, pc, cc)
 }
 
