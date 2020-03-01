@@ -37,7 +37,6 @@ func (e *EventProcessor) InitSimpleProcessor(brokers []string, group goka.Group,
 func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group, topic goka.Stream){
 	pc := NewConfig()
 	cc := NewConfig()
-	emitter := NewAppEmitter(brokers, "payment-storage", new(models.PaymentCodec), pc)
 
 	cb := func(ctx goka.Context, msg interface{}) {
 		log.Printf("msg = %v", msg)
@@ -46,11 +45,6 @@ func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group
 			log.Println("Error while parsing message to the structure")
 		}
 		log.Printf("Payment from %v was just processed", payment.Author)
-
-		err := emitter.EmitSync(payment.Author, payment)
-		if err != nil {
-			log.Fatalf("error emitting message: %v", err)
-		}
 	}
 
 	e.InitSimpleProcessor(brokers, group, cb, topic, pc, cc)

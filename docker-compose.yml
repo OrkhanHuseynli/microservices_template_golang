@@ -59,3 +59,12 @@ services:
       - "8082:8082"
     depends_on:
       - kafka
+
+  payment_storage:
+    build:
+      context: ./payment_storage
+      dockerfile: Dockerfile
+    image: payment_storage
+    depends_on:
+      - kafka
+      - payment_processing
