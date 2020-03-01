@@ -6,7 +6,7 @@ import (
 	"github.com/lovoo/goka"
 	"github.com/lovoo/goka/kafka"
 	"log"
-	"microservices_template_golang/payment/src/models"
+	"microservices_template_golang/payment_storage/src/models"
 	"os"
 	"os/signal"
 	"syscall"

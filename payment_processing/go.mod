@@ -1,4 +1,4 @@
-module microservices_template_golang/payment
+module microservices_template_golang/payment_processing
 
 go 1.13
 

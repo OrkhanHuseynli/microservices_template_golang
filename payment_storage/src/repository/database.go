@@ -20,6 +20,6 @@ func (d *Database)Store(payment *models.ProcessedPayment)  {
 	log.Printf("Total number of payments processed: %v", len(d.db))
 }
 
-func (d *Database) Get(paymentID string) models.ProcessedPayment  {
+func (d *Database) Get(paymentID string) models.ProcessedPayment {
 	return d.db[paymentID]
 }

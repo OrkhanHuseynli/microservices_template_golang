@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"microservices_template_golang/payment/src/models"
+	"microservices_template_golang/payment_storage/src/models"
 	"net/http"
 )
 

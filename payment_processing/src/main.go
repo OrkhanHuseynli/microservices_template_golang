@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/lovoo/goka"
-	"microservices_template_golang/payment/src/eventmanager"
+	"microservices_template_golang/payment_processing/src/eventmanager"
 )
 
 var (
