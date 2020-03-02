@@ -25,3 +25,15 @@ func (c *PaymentListCodec) Decode(data []byte) (interface{}, error) {
 	err := json.Unmarshal(data, &m)
 	return m, err
 }
+
+
+type ProcessedPaymentCodec struct{}
+
+func (c *ProcessedPaymentCodec) Encode(value interface{}) ([]byte, error) {
+	return json.Marshal(value)
+}
+
+func (c *ProcessedPaymentCodec) Decode(data []byte) (interface{}, error) {
+	var p ProcessedPayment
+	return &p, json.Unmarshal(data, &p)
+}
