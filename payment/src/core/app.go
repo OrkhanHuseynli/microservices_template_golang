@@ -29,9 +29,7 @@ func (a *App) Start() {
 	port := 8080
 	emitter := eventmanager.DefaultEmitter(brokers, topic, new(models.PaymentCodec))
 	handler := handlers.NewServiceHandler(emitter)
-	getHandler := handlers.NewGetHandler()
 	http.Handle("/payment", handler)
-	http.Handle("/payment/", getHandler)
 	log.Printf("Server starting on port %v\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 }
