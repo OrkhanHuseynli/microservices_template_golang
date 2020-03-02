@@ -16,5 +16,5 @@ RUN echo " ******** RUN BUILD ******** "
 RUN go build -mod=vendor main.go
 RUN echo " ******** LIST DIR AFTER BUILD ******** "
 RUN ls
-EXPOSE 8080
+EXPOSE 8081
 ENTRYPOINT ["./main"]
