@@ -5,8 +5,19 @@ type SimpleResponse struct {
 	Date    string `json:"date, omitempty"`
 }
 
+
+type PaymentResponse struct {
+	Message string `json:"message"`
+	Payments []Payment `json:"payments"`
+}
+
 type Payment struct {
 	Author    string	`json:"author"`
 	Product   string	`json:"product"`
 	Sum		  string	`json:"sum"`
+}
+
+type ProcessedPayment struct {
+	PaymentID string 	`json:"paymentID"`
+	Payment
 }

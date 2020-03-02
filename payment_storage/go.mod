@@ -1,10 +1,10 @@
-module github.com/microservices_template_golang/payment_history
+module microservices_template_golang/payment_storage
 
 go 1.13
 
 require (
-	github.com/Shopify/sarama v1.26.1 // indirect
-	github.com/bsm/sarama-cluster v2.1.15+incompatible // indirect
+	github.com/Shopify/sarama v1.26.1
+	github.com/bsm/sarama-cluster v2.1.15+incompatible
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
