@@ -42,7 +42,6 @@ func (e *EventProcessor) InitDefaultProcessor(brokers []string, group goka.Group
 	emitter := NewAppEmitter(brokers, storageTopic, new(models.ProcessedPaymentCodec), pc)
 
 	cb := func(ctx goka.Context, msg interface{}) {
-		log.Printf("msg = %v", msg)
 		payment, ok := msg.(*models.Payment)
 		if !ok {
 			log.Println("Error while parsing message to the structure")
